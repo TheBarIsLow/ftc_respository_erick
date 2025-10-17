@@ -70,7 +70,6 @@ public class BasicTeleOp extends LinearOpMode {
             telemetry.addData("Back Left Motor Power", backLeftPower);
             telemetry.addData("Back Right Motor Power", backRightPower);
             telemetry.update();
-            //hello
         }
     }
 }
