@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name="Erick Strafe Drive test", group="Linear Opmode")
-public class BasicTeleOp extends LinearOpMode {
+@TeleOp(name="Erick_Strafe_Drive_test", group="Linear Opmode")
+public class BasicTeleOp5 extends LinearOpMode {
 
     // Declare OpMode members.
     private DcMotor frontLeftDrive = null;
@@ -45,10 +45,10 @@ public class BasicTeleOp extends LinearOpMode {
         while (opModeIsActive()) {
 
             //get the data from the gamepad
-            frontL=gamepad1.left_stick_y-((gamepad1.left_stick_x+gamepad1.right_stick_x)/2);
+            frontL=gamepad1.left_stick_y-((-gamepad1.left_stick_x-gamepad1.right_stick_x)/2);
             frontR=gamepad1.right_stick_y-((gamepad1.left_stick_x+gamepad1.right_stick_x)/2);
             backR=gamepad1.right_stick_y-((gamepad1.left_stick_x+gamepad1.right_stick_x)/2);
-            backL=gamepad1.left_stick_y-((gamepad1.left_stick_x+gamepad1.right_stick_x)/2);
+            backL=gamepad1.left_stick_y-((-gamepad1.left_stick_x-gamepad1.right_stick_x)/2);
 
 
             // Get joystick values from gamepad1 for forward movement
