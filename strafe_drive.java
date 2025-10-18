@@ -50,19 +50,19 @@ public class Erick_Strafe_Drive_test extends LinearOpMode {
             backR=gamepad1.right_stick_y+((gamepad1.left_stick_x+gamepad1.right_stick_x)/2);
             backL=gamepad1.left_stick_y-((gamepad1.left_stick_x+gamepad1.right_stick_x)/2);
 
-
+/*
             // Get joystick values from gamepad1 for forward movement
             double  frontLeftPower = frontL;
             double frontRightPower = frontR;
             double backLeftPower = backL;
             double backRightPower = backR;
-
+*/
 
             // Set motor power
-            frontLeftDrive.setPower(frontLeftPower);
-            frontRightDrive.setPower(frontRightPower);
-            backLeftDrive.setPower(backLeftPower);
-            backRightDrive.setPower(backRightPower);
+            frontLeftDrive.setPower(frontL);
+            frontRightDrive.setPower(frontR);
+            backLeftDrive.setPower(backL);
+            backRightDrive.setPower(backR);
 
             // Display current motor power on Driver Station
             telemetry.addData("Front Left Motor Power", frontLeftPower);
