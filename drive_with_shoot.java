@@ -24,6 +24,8 @@ public class Erick_Strafe_Drive_test extends LinearOpMode {
         double frontR=0;
         double backR=0;
         int shootM=0;
+
+
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during robot configuration.
         frontLeftDrive  = hardwareMap.get(DcMotor.class, "front_Left_drive");
@@ -32,8 +34,7 @@ public class Erick_Strafe_Drive_test extends LinearOpMode {
         backRightDrive = hardwareMap.get(DcMotor.class, "back_Right_drive");
         shootMotor = hardwareMap.get(DcMotor.class,"shooting_motor");
 
-        // Most robots need the motors to be reversed or set to FORWARD.
-        // You will need to determine which direction is "forward" for your robot.
+
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE); // Reverse one motor for tank drive
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
