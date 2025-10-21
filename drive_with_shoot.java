@@ -55,7 +55,7 @@ public class Erick_Strafe_Drive_test extends LinearOpMode {
             backR=gamepad1.right_stick_y+((gamepad1.left_stick_x+gamepad1.right_stick_x)/2);
             backL=gamepad1.left_stick_y-((gamepad1.left_stick_x+gamepad1.right_stick_x)/2);
             //makes the trigger input into an integer for shootMotor
-            if(gamepad1.right_trigger>0.25){
+            if(gamepad1_a){
                 shootM=1;
             }else{
                 shootM=0;
