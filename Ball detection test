@@ -1,0 +1,134 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.openftc.easyopencv.*;
+import org.opencv.core.*;
+import org.opencv.imgproc.Imgproc;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@TeleOp(name = "USB Webcam Ball Detection", group = "Testing")
+public class WebcamBallDetection extends LinearOpMode {
+
+    OpenCvCamera webcam;
+    BallDetectionPipeline pipeline;
+
+    @Override
+    public void runOpMode() {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources()
+                .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(
+                hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+
+        pipeline = new BallDetectionPipeline();
+        webcam.setPipeline(pipeline);
+
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("Camera Error", errorCode);
+                telemetry.update();
+            }
+        });
+
+        telemetry.addLine("Waiting for start...");
+        telemetry.update();
+
+        waitForStart();
+
+        while (opModeIsActive()) {
+            telemetry.addData("Detected Ball X", pipeline.getBallX());
+            telemetry.addData("Detected Ball Y", pipeline.getBallY());
+            telemetry.addData("Detected Radius", pipeline.getBallRadius());
+            telemetry.update();
+
+            sleep(50);
+        }
+
+        webcam.stopStreaming();
+    }
+
+    // ======== Ball Detection Pipeline ========
+    public static class BallDetectionPipeline extends OpenCvPipeline {
+        private double ballX = -1;
+        private double ballY = -1;
+        private double ballRadius = 0;
+
+        private Mat hsv = new Mat();
+        private Mat mask = new Mat();
+        private Mat hierarchy = new Mat();
+
+        @Override
+        public Mat processFrame(Mat input) {
+            // Convert the frame to HSV color space
+            Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
+
+            // 🎨 Set color range (tune for your ball color)
+            // Example: Red ball
+            Scalar lowerBound1 = new Scalar(0, 120, 70);
+            Scalar upperBound1 = new Scalar(10, 255, 255);
+
+            Scalar lowerBound2 = new Scalar(170, 120, 70);
+            Scalar upperBound2 = new Scalar(180, 255, 255);
+
+            Mat mask1 = new Mat();
+            Mat mask2 = new Mat();
+            Core.inRange(hsv, lowerBound1, upperBound1, mask1);
+            Core.inRange(hsv, lowerBound2, upperBound2, mask2);
+
+            Core.add(mask1, mask2, mask); // Combine both red ranges
+
+            // Find contours (possible balls)
+            List<MatOfPoint> contours = new ArrayList<>();
+            Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+
+            double largestArea = 0;
+            Point bestCenter = new Point(-1, -1);
+            double bestRadius = 0;
+
+            for (MatOfPoint contour : contours) {
+                Point center = new Point();
+                float[] radius = new float[1];
+                MatOfPoint2f contour2f = new MatOfPoint2f(contour.toArray());
+                Imgproc.minEnclosingCircle(contour2f, center, radius);
+
+                double area = Imgproc.contourArea(contour);
+                if (area > largestArea && radius[0] > 10) { // filter noise
+                    largestArea = area;
+                    bestCenter = center;
+                    bestRadius = radius[0];
+                }
+            }
+
+            ballX = bestCenter.x;
+            ballY = bestCenter.y;
+            ballRadius = bestRadius;
+
+            // Draw detection on the screen
+            if (ballRadius > 0) {
+                Imgproc.circle(input, bestCenter, (int) bestRadius, new Scalar(0, 255, 0), 3);
+                Imgproc.putText(input, "Ball", new Point(bestCenter.x - 10, bestCenter.y - 10),
+                        Imgproc.FONT_HERSHEY_SIMPLEX, 0.8, new Scalar(255, 255, 255), 2);
+            }
+
+            // Cleanup
+            mask1.release();
+            mask2.release();
+
+            return input;
+        }
+
+        public double getBallX() { return ballX; }
+        public double getBallY() { return ballY; }
+        public double getBallRadius() { return ballRadius; }
+    }
+}
