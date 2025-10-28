@@ -104,7 +104,7 @@ public class Swatisniper3000 extends LinearOpMode {
             telemetry.update();
             //sleep(20);
             if(detection.metadata != null){
-                frontL=detection.ftcPose.yaw/100
+                frontL=detection.ftcPose.yaw/34
                 frontLeftDrive.setPower(frontL);
                 frontRightDrive.setPower(frontR);
                 backLeftDrive.setPower(backL);
