@@ -4,11 +4,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 
-@TeleOp(name="Erick_Strafe_Drive_test", group="Linear Opmode")
-public class Erick_Strafe_Drive_test extends LinearOpMode {
+@TeleOp(name = "SWATISNIPER3000", group = "Concept")
+public class Swatisniper3000 extends LinearOpMode {
 
-    // Declare OpMode members.
+    private AprilTagProcessor aprilTag;
+    private VisionPortal visionPortal;
     private DcMotor frontLeftDrive = null;
     private DcMotor frontRightDrive = null;
     private DcMotor backLeftDrive = null;
@@ -16,60 +24,96 @@ public class Erick_Strafe_Drive_test extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-        double frontL=0;
-        double backL=0;
-        double frontR=0;
-        double backR=0;
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during robot configuration.
+
         frontLeftDrive  = hardwareMap.get(DcMotor.class, "front_Left_drive");
         frontRightDrive = hardwareMap.get(DcMotor.class, "front_Right_drive");
         backLeftDrive  = hardwareMap.get(DcMotor.class, "back_Left_drive");
         backRightDrive = hardwareMap.get(DcMotor.class, "back_Right_drive");
 
-        // Most robots need the motors to be reversed or set to FORWARD.
-        // You will need to determine which direction is "forward" for your robot.
         frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         frontRightDrive.setDirection(DcMotor.Direction.REVERSE); // Reverse one motor for tank drive
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
         backRightDrive.setDirection(DcMotor.Direction.REVERSE); // Reverse one motor for tank drive
 
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-        telemetry.addData("Status", "Running");
+
+        // Initialize AprilTag Processor with enhanced visualization
+        aprilTag = new AprilTagProcessor.Builder()
+                .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
+                .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
+                .setDrawTagID(true)
+                .setDrawTagOutline(true)
+                .setDrawCubeProjection(true)    // 3D cube projection
+                .setDrawAxes(true)              // 3D coordinate axes
+                .build();
+
+        // Create the vision portal with camera
+        VisionPortal.Builder builder = new VisionPortal.Builder();
+        builder.setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"));
+        builder.setStreamFormat(VisionPortal.StreamFormat.YUY2);
+        builder.enableLiveView(true);  // Enable camera preview on DS
+        builder.setAutoStopLiveView(true);
+        builder.addProcessor(aprilTag);
+
+        visionPortal = builder.build();
+
+        // Optional: Set camera resolution for better detection
+        visionPortal.setProcessorEnabled(aprilTag, true);
+
+        telemetry.addData("->", "SWATISNIPER3000 READY");
+        telemetry.addData("->", "Press Play to begin scanning");
         telemetry.update();
 
-        // Run until the end of the match (driver presses STOP)
+        waitForStart();
+
         while (opModeIsActive()) {
+            // Check all detected tags
+            if (!aprilTag.getDetections().isEmpty()) {
+                for (AprilTagDetection detection : aprilTag.getDetections()) {
+                    if (detection.metadata != null) {
+                        telemetry.addLine("\n=== SWATISNIPER3000 TARGET ACQUIRED ===");
+                        telemetry.addData("TAG ID", "#%d (%s)", detection.id, detection.metadata.name);
+                        telemetry.addData("RANGE", "%.1f inches", detection.ftcPose.range);
+                        telemetry.addData("BEARING", "%.1f deg", detection.ftcPose.bearing);
+                        telemetry.addData("YAW", "%.1f deg", detection.ftcPose.yaw);
+                        telemetry.addLine("--- 3D POSE DATA ---");
+                        telemetry.addData("X", "%.1f inches", detection.ftcPose.x);
+                        telemetry.addData("Y", "%.1f inches", detection.ftcPose.y);
+                        telemetry.addData("Z", "%.1f inches", detection.ftcPose.z);
+                        telemetry.addData("ROLL", "%.1f deg", detection.ftcPose.roll);
+                        telemetry.addData("PITCH", "%.1f deg", detection.ftcPose.pitch);
+                        telemetry.addLine("-------------------");
+                    } else {
+                        telemetry.addLine("\n=== UNKNOWN TAG DETECTED ===");
+                        telemetry.addData("TAG ID", "#%d", detection.id);
+                        telemetry.addData("RANGE", "%.1f inches", detection.ftcPose.range);
+                        telemetry.addData("BEARING", "%.1f deg", detection.ftcPose.bearing);
+                    }
+                }
+                telemetry.addData("TAGS DETECTED", aprilTag.getDetections().size());
+            } else {
+                telemetry.addLine("SWATISNIPER3000: No targets in sight");
+                telemetry.addData("STATUS", "Scanning...");
+            }
 
-            //get the data from the gamepad
-            frontL=gamepad1.left_stick_y+((gamepad1.left_stick_x+gamepad1.right_stick_x)/2);
-            frontR=gamepad1.right_stick_y-((gamepad1.left_stick_x+gamepad1.right_stick_x)/2);
-            backR=gamepad1.right_stick_y+((gamepad1.left_stick_x+gamepad1.right_stick_x)/2);
-            backL=gamepad1.left_stick_y-((gamepad1.left_stick_x+gamepad1.right_stick_x)/2);
+            // Vision portal status
+            telemetry.addLine("\n=== SYSTEM STATUS ===");
+            telemetry.addData("Camera", visionPortal.getCameraState());
+            telemetry.addData("Vision", "AprilTag Processor");
+            telemetry.addData("FPS", "%.1f", visionPortal.getFps());
 
-/*
-            // Get joystick values from gamepad1 for forward movement
-            double  frontLeftPower = frontL;
-            double frontRightPower = frontR;
-            double backLeftPower = backL;
-            double backRightPower = backR;
-*/
-
-            // Set motor power
-            frontLeftDrive.setPower(frontL);
-            frontRightDrive.setPower(frontR);
-            backLeftDrive.setPower(backL);
-            backRightDrive.setPower(backR);
-
-            // Display current motor power on Driver Station
-            telemetry.addData("Front Left Motor Power", frontLeftPower);
-            telemetry.addData("Front Right Motor Power", frontRightPower);
-            telemetry.addData("Back Left Motor Power", backLeftPower);
-            telemetry.addData("Back Right Motor Power", backRightPower);
             telemetry.update();
+            //sleep(20);
+            if(detection.metadata != null){
+                frontL=detection.ftcPose.yaw/100
+                frontLeftDrive.setPower(frontL);
+                frontRightDrive.setPower(frontR);
+                backLeftDrive.setPower(backL);
+                backRightDrive.setPower(backR);
+            }
         }
+
+
+        // Clean up
+        visionPortal.close();
     }
 }
