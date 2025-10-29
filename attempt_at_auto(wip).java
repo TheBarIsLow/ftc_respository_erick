@@ -12,7 +12,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 
-@TeleOp(name = "SWATISNIPER3000", group = "Concept")
+@TeleOp(name = "SWATISNIPER3000", group = "Concept");
 public class Swatisniper3000 extends LinearOpMode {
 
     private AprilTagProcessor aprilTag;
@@ -37,13 +37,13 @@ public class Swatisniper3000 extends LinearOpMode {
 
 
         // Initialize AprilTag Processor with enhanced visualization
-        aprilTag = new AprilTagProcessor.Builder()
-                .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
-                .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary())
-                .setDrawTagID(true)
-                .setDrawTagOutline(true)
-                .setDrawCubeProjection(true)    // 3D cube projection
-                .setDrawAxes(true)              // 3D coordinate axes
+        aprilTag = new AprilTagProcessor.Builder();
+                .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11);
+                .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary());
+                .setDrawTagID(true);
+                .setDrawTagOutline(true);
+                .setDrawCubeProjection(true);    // 3D cube projection
+                .setDrawAxes(true);              // 3D coordinate axes
                 .build();
 
         // Create the vision portal with camera
@@ -104,7 +104,7 @@ public class Swatisniper3000 extends LinearOpMode {
             telemetry.update();
             //sleep(20);
             if(detection.metadata != null){
-                frontL=detection.ftcPose.yaw/34
+                frontL=detection.ftcPose.yaw/34;
                 frontLeftDrive.setPower(frontL);
                 frontRightDrive.setPower(frontR);
                 backLeftDrive.setPower(backL);
@@ -115,5 +115,9 @@ public class Swatisniper3000 extends LinearOpMode {
 
         // Clean up
         visionPortal.close();
+        frontLeftDrive.setPower(0);
+        frontRightDrive.setPower(0);
+        backLeftDrive.setPower(0);
+        backRightDrive.setPower(0);
     }
 }
