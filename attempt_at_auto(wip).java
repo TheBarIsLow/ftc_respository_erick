@@ -17,23 +17,23 @@ public class Swatisniper3000 extends LinearOpMode {
 
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
-    private DcMotor frontLeftDrive = null;
-    private DcMotor frontRightDrive = null;
-    private DcMotor backLeftDrive = null;
-    private DcMotor backRightDrive = null;
+    private DcMotor frontLeft = null;
+    private DcMotor frontRight = null;
+    private DcMotor backLeft = null;
+    private DcMotor backRight = null;
 
     @Override
     public void runOpMode() {
 
-        frontLeftDrive  = hardwareMap.get(DcMotor.class, "front_Left_drive");
-        frontRightDrive = hardwareMap.get(DcMotor.class, "front_Right_drive");
-        backLeftDrive  = hardwareMap.get(DcMotor.class, "back_Left_drive");
-        backRightDrive = hardwareMap.get(DcMotor.class, "back_Right_drive");
+        frontLeft  = hardwareMap.get(DcMotor.class, "front_Left_drive");
+        frontRight = hardwareMap.get(DcMotor.class, "front_Right_drive");
+        backLeft  = hardwareMap.get(DcMotor.class, "back_Left_drive");
+        backRight = hardwareMap.get(DcMotor.class, "back_Right_drive");
 
-        frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        frontRightDrive.setDirection(DcMotor.Direction.REVERSE); // Reverse one motor for tank drive
-        backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backRightDrive.setDirection(DcMotor.Direction.REVERSE); // Reverse one motor for tank drive
+        frontLeft.setDirection(DcMotor.Direction.FORWARD);
+        frontRight.setDirection(DcMotor.Direction.REVERSE); // Reverse one motor for tank drive
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.REVERSE); // Reverse one motor for tank drive
 
 
         // Initialize AprilTag Processor with enhanced visualization
@@ -114,9 +114,9 @@ public class Swatisniper3000 extends LinearOpMode {
 
         // Clean up
         visionPortal.close();
-        frontLeftDrive.setPower(0);
-        frontRightDrive.setPower(0);
-        backLeftDrive.setPower(0);
-        backRightDrive.setPower(0);
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
     }
 }
