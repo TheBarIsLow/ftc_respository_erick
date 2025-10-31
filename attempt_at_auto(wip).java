@@ -38,13 +38,13 @@ public class Swatisniper3000 extends LinearOpMode {
 
         // Initialize AprilTag Processor with enhanced visualization
         aprilTag = new AprilTagProcessor.Builder();
-                .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11);
-                .setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary());
-                .setDrawTagID(true);
-                .setDrawTagOutline(true);
-                .setDrawCubeProjection(true);    // 3D cube projection
-                .setDrawAxes(true);              // 3D coordinate axes
-                .build();
+                setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11);
+                setTagLibrary(AprilTagGameDatabase.getCurrentGameTagLibrary());
+                setDrawTagID(true);
+                setDrawTagOutline(true);
+                setDrawCubeProjection(true);    // 3D cube projection
+                setDrawAxes(true);              // 3D coordinate axes
+                build();
 
         // Create the vision portal with camera
         VisionPortal.Builder builder = new VisionPortal.Builder();
@@ -103,12 +103,11 @@ public class Swatisniper3000 extends LinearOpMode {
 
             telemetry.update();
             //sleep(20);
-            if(detection.metadata != null){
-                frontL=detection.ftcPose.yaw/34;
-                frontLeftDrive.setPower(frontL);
-                frontRightDrive.setPower(frontR);
-                backLeftDrive.setPower(backL);
-                backRightDrive.setPower(backR);
+            if(detection.metadata != null);
+                frontLeftDrive.setPower(detection.ftcPose.yaw/34);
+                frontRightDrive.setPower(detection.ftcPose.yaw/-34);
+                backLeftDrive.setPower(detection.ftcPose.yaw/34);
+                backRightDrive.setPower(detection.ftcPose.yaw/-34);
             }
         }
 
