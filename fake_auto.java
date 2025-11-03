@@ -35,20 +35,23 @@ public class forwardBack extends LinearOpMode {
 
         waitForStart();
 
+            // Moves the bot forward
             frontLeft.setPower(1);
             frontRight.setPower(1);
             backLeft.setPower(1);
             backRight.setPower(1);
             sleep(50)
+            // Moves the bot forward AGAIN
             frontLeft.setPower(1);
             frontRight.setPower(1);
             backLeft.setPower(1);
             backRight.setPower(1);
             sleep(50)
-            frontLeft.setPower(1);
-            frontRight.setPower(1);
-            backLeft.setPower(1);
-            backRight.setPower(1);
+            // Stops the bot
+            frontLeft.setPower(0);
+            frontRight.setPower(0);
+            backLeft.setPower(0);
+            backRight.setPower(0);
 
 
         }
