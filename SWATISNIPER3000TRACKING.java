@@ -1,3 +1,8 @@
+//April Tag Detection and Tracking
+//WORKING CODE
+
+//NEED TO CHANGE DESIRED DISTANCE 
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -10,14 +15,14 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagGameDatabase;
 
-@TeleOp(name = "SWATISNIPER3000TRACKING", group = "Concept")
-public class SWATISNIPER3000TRACKING" extends LinearOpMode {
+@TeleOp(name = "HornSWATISNIPER3000TRACKINGTest", group = "Testing")
+public class HornSWATISNIPER3000TRACKINGTest extends LinearOpMode {
 
     private AprilTagProcessor aprilTag;
     private VisionPortal visionPortal;
     
     // Drive motors
-    private DcMotor leftFront, leftRear, rightFront, rightRear;
+    private DcMotor frontLeft, backLeft, frontRight, backRight;
     
     // Tracking parameters
     private double DESIRED_DISTANCE = 12.0; // inches
@@ -132,45 +137,45 @@ public class SWATISNIPER3000TRACKING" extends LinearOpMode {
 
     private void initDriveMotors() {
         // Initialize drive motors - update these names to match your robot configuration
-        leftFront = hardwareMap.get(DcMotor.class, "left_front");
-        leftRear = hardwareMap.get(DcMotor.class, "left_rear");
-        rightFront = hardwareMap.get(DcMotor.class, "right_front");
-        rightRear = hardwareMap.get(DcMotor.class, "right_rear");
+        frontLeft = hardwareMap.get(DcMotor.class, "front_left");
+        backLeft = hardwareMap.get(DcMotor.class, "back_left");
+        frontRight = hardwareMap.get(DcMotor.class, "front_right");
+        backRight = hardwareMap.get(DcMotor.class, "back_right");
 
         // Set motor directions (adjust based on your robot)
-        leftFront.setDirection(DcMotor.Direction.REVERSE);
-        leftRear.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setDirection(DcMotor.Direction.FORWARD);
-        rightRear.setDirection(DcMotor.Direction.FORWARD);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.FORWARD);
 
         // Set motors to brake when power is zero
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     private void moveRobot(double drive, double strafe, double turn) {
         // Calculate motor powers for mecanum drive
-        double leftFrontPower = drive + strafe + turn;
-        double leftRearPower = drive - strafe + turn;
-        double rightFrontPower = drive - strafe - turn;
-        double rightRearPower = drive + strafe - turn;
+        double frontLeftPower = drive + strafe + turn;
+        double backLeftPower = drive - strafe + turn;
+        double frontRightPower = drive - strafe - turn;
+        double backRightPower = drive + strafe - turn;
 
         // Normalize powers to maintain proper proportions
-        double maxPower = Math.max(Math.max(Math.abs(leftFrontPower), Math.abs(leftRearPower)),
-                                  Math.max(Math.abs(rightFrontPower), Math.abs(rightRearPower)));
+        double maxPower = Math.max(Math.max(Math.abs(frontLeftPower), Math.abs(backLeftPower)),
+                                  Math.max(Math.abs(frontRightPower), Math.abs(backRightPower)));
         if (maxPower > 1.0) {
-            leftFrontPower /= maxPower;
-            leftRearPower /= maxPower;
-            rightFrontPower /= maxPower;
-            rightRearPower /= maxPower;
+            frontLeftPower /= maxPower;
+            backLeftPower /= maxPower;
+            frontRightPower /= maxPower;
+            backRightPower /= maxPower;
         }
 
         // Set motor powers
-        leftFront.setPower(leftFrontPower);
-        leftRear.setPower(leftRearPower);
-        rightFront.setPower(rightFrontPower);
-        rightRear.setPower(rightRearPower);
+        frontLeft.setPower(frontLeftPower);
+        backLeft.setPower(backLeftPower);
+        frontRight.setPower(frontRightPower);
+        backRight.setPower(backRightPower);
     }
 }
