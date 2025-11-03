@@ -40,17 +40,10 @@ public class forwardBack extends LinearOpMode {
             backLeft.setPower(1);
             backRight.setPower(1);
             sleep(50)
-            frontLeft.setPower(1);
-            frontRight.setPower(1);
-            backLeft.setPower(1);
-            backRight.setPower(1);
-            sleep(50)
-            frontLeft.setPower(1);
-            frontRight.setPower(1);
-            backLeft.setPower(1);
-            backRight.setPower(1);
-
-
+            frontLeft.setPower(0);
+            frontRight.setPower(0);
+            backLeft.setPower(0);
+            backRight.setPower(0);
         }
     }
 
