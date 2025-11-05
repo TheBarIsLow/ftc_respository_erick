@@ -55,6 +55,10 @@ public class Swatisniper3000 extends LinearOpMode {
         builder.addProcessor(aprilTag);
 
         visionPortal = builder.build();
+        double frontL;
+        double frontR;
+        double backL;
+        double backR;
 
         // Optional: Set camera resolution for better detection
         visionPortal.setProcessorEnabled(aprilTag, true);
@@ -103,11 +107,8 @@ public class Swatisniper3000 extends LinearOpMode {
 
             telemetry.update();
             //sleep(20);
-            if(detection.metadata != null);
-                frontLeft.setPower(detection.ftcPose.yaw/34);
-                frontRight.setPower(detection.ftcPose.yaw/-34);
-                backLeft.setPower(detection.ftcPose.yaw/34);
-                backRight.setPower(detection.ftcPose.yaw/-34);
+            if(detection.metadata != null){
+                frontL=frontL+(detection.ftcPose.z)
             }
         }
 
