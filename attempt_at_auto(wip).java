@@ -108,7 +108,14 @@ public class Swatisniper3000 extends LinearOpMode {
             telemetry.update();
             //sleep(20);
             if(detection.metadata != null){
-                frontL=frontL+(detection.ftcPose.z)
+                frontL=frontL+((detection.ftcPose.z-20)/100);
+                frontR=frontR+((detection.ftcPose.z-20)/100);
+                backL=backL+((detection.ftcPose.z-20)/100);
+                backR=backR+((detection.ftcPose.z-20)/100);
+                frontR=frontR+(detection.ftcPose.bearing/34);
+                backR=backR+(detection.ftcPose.bearing/34);
+                backL=backL+(detection.ftcPose.bearing/34);
+                frontL=frontL+(detection.ftcPose.bearing/34);
             }
         }
 
