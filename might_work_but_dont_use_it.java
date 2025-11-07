@@ -4,8 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -107,7 +106,7 @@ public class Swatisniper3000 extends LinearOpMode {
 
             telemetry.update();
             //sleep(20);
-            if(detection.metadata != null){
+            if(detection.metadata != null && detection.ftcPose.z<50){
                 frontL=frontL+((detection.ftcPose.z-20)/100);
                 frontR=frontR+((detection.ftcPose.z-20)/100);
                 backL=backL+((detection.ftcPose.z-20)/100);
